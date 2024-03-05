@@ -1,6 +1,6 @@
 import PropTypes from "prop-types";
 import { useState, useRef, useEffect } from "react";
-import cadetLogo from "./cryptocadetlogo_white.png";
+import cadetLogo from "../assets/cryptocadetlogo_white.png";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import EthereumProvider from "@walletconnect/ethereum-provider";
