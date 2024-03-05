@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import CryptoPay from './CryptoPayButton'
-import CryptoPayModal, {openModal} from './CryptoPayModal'
+import CryptoPay from './components/CryptoPayButton'
+import CryptoPayModal, {openModal} from './components/CryptoPayModal'
 import './App.css'
 
 function App() {
