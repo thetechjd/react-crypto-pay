@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import reactLogo from './assets/react.svg'
 import viteLogo from '/vite.svg'
-import CryptoPay from './components/CryptoPayButton'
+import CryptoPayButton from './components/CryptoPayButton'
 import CryptoPayModal, {openModal} from './components/CryptoPayModal'
 import './App.css'
 
@@ -31,7 +31,7 @@ function App() {
      />
       
       {showButton && (
-          <CryptoPay 
+          <CryptoPayButton 
           onClick={getModal}
           label='Pay with Crypto'
           
