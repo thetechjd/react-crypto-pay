@@ -1,17 +1,25 @@
 {
-  "name": "react-crypto-pay",
+  "name": "@cryptocadet/react-crypto-pay",
   "private": false,
-  "version": "1.6.0",
+  "version": "1.0.0",
   "author": "The TechJD",
   "license": "MIT",
   "description": "Api for evm-chain crypto payment integration.",
+  "files": [
+    "dist"
+  ],
   "main": "./dist/react-crypto-pay.umd.js",
   "module": "./dist/react-crypto-pay.es.js",
   "exports": {
     ".": {
       "import": "./dist/react-crypto-pay.es.js",
       "require": "./dist/react-crypto-pay.umd.js"
+    },
+    "./dist/style.css": {
+      "import": "./dist/style.css",
+      "require": "./dist/styles.css"
     }
+   
   },
   "repository": {
     "type": "git",
@@ -24,6 +32,9 @@
     "wallet"
   ],
   "type": "module",
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "dev": "vite",
     "build": "vite build",
@@ -31,16 +42,6 @@
     "preview": "vite preview",
     "test": "vitest run",
     "watch": "vitest"
-  },
-  "dependencies": {
-    "@coinbase/wallet-sdk": "^3.7.2",
-    "@walletconnect/ethereum-provider": "^2.11.2",
-    "axios": "^1.6.7",
-    "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "styled-components": "^6.1.8",
-    "web3": "^4.5.0",
-    "web3modal": "^1.9.12"
   },
   "devDependencies": {
     "@testing-library/react": "^14.2.1",

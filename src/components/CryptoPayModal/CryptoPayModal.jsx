@@ -1,31 +1,30 @@
-import PropTypes from "prop-types";
-import { useState, useRef, useEffect } from "react";
-import cadetLogo from "../assets/cryptocadetlogo_white.png";
+//import PropTypes from "prop-types";
+import { useState} from "react";
+import cadetLogo from "../../assets/cryptocadetlogo_white.png";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import EthereumProvider from "@walletconnect/ethereum-provider";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import axios from "axios";
-import WaveLoading from "./WaveLoading";
+import WaveLoading from "../WaveLoading";
+import './../../index.css'
 
-let modalInstance = null;
 
-const endPoint = "http://localhost:3004"
 
 const CryptoPayModal = ({
   requireWalletConnection = true,
   apiKey,
   style,
   productId,
+  label,
 }) => {
-  const modalRef = useRef(null);
-
   const [payOptions, setPayOptions] = useState(
     requireWalletConnection ? false : true
   );
   const [walletAddress, setWalletAddress] = useState("");
   const [provider, setProvider] = useState();
   const [showModal, setShowModal] = useState(false);
+  const [authorized, setAuthorized] = useState(true);
   const [waiting, setWaiting] = useState(false);
   const [user, setUser] = useState();
   const [network, setNetwork] = useState("");
@@ -34,40 +33,22 @@ const CryptoPayModal = ({
   const [refCode, setRefCode] = useState("");
   const [routerAddress, setRouterAddress] = useState("");
 
-  useEffect(() => {
-    const q = new URLSearchParams(window.location.search);
-    if (q.get("referrer")) {
-      setRefCode(q.get("referrer"));
-    }
-  });
+
+  const endPoint = "http://localhost:3004";
+
+  
 
   const getUser = async () => {
-    
     try {
-      const response = await axios.post(
-        `${endPoint}/api/user/get-key`,
-        {
-          apiKey,
-        }
-      );
-      
+      const response = await axios.post(`${endPoint}/api/user/get-key`, {
+        apiKey,
+      });
+
       setUser(response.data);
+      setShowModal(true);
     } catch (error) {
-     
+      setAuthorized(false);
     }
-  };
-
-  const openModal = () => {
-    getUser();
-    const modalElement = modalRef.current;
-    if (modalElement) {
-      modalElement.style.display = "block";
-    }
-  };
-
-  // Expose toggleModal function globally
-  modalInstance = {
-    openModal: () => openModal(),
   };
 
   const providerOptions = {
@@ -117,7 +98,13 @@ const CryptoPayModal = ({
   }
 
   const getNetwork = async (network) => {
-    setMessage("")
+    setMessage("");
+    if (typeof window !== "undefined") {
+      const q = new URLSearchParams(window.location.search);
+      if (q.get("referrer")) {
+        setRefCode(q.get("referrer"));
+      }
+    }
     // Logic to pay in ETH
     // const response = await axios.get("http://localhost:3004/hello");
     // console.log(response.data);
@@ -125,19 +112,16 @@ const CryptoPayModal = ({
     setNetwork(network);
 
     try {
-      const response = await axios.post(
-        `${endPoint}/api/user/config`,
-        {
-          network,
-        }
-      );
+      const response = await axios.post(`${endPoint}/api/user/config`, {
+        network,
+      });
       setRouterAddress(response.data);
     } catch (error) {
       setMessage("Invalid network.");
 
       setTimeout(() => {
-        setNetwork("")}, 1000
-      );
+        setNetwork("");
+      }, 1000);
     }
   };
 
@@ -149,21 +133,15 @@ const CryptoPayModal = ({
       const price = user.products[productId];
       const tokenAddress = user.options[network][token];
 
-      const router = await axios.post(
-        `${endPoint}/api/user/options`,
-        {
-          network,
-          token: routerAddress,
-        }
-      );
+      const router = await axios.post(`${endPoint}/api/user/options`, {
+        network,
+        token: routerAddress,
+      });
 
-      const response = await axios.post(
-        `${endPoint}/api/user/options`,
-        {
-          network,
-          token: tokenAddress,
-        }
-      );
+      const response = await axios.post(`${endPoint}/api/user/options`, {
+        network,
+        token: tokenAddress,
+      });
 
       const abi = JSON.parse(response.data);
       const routerAbi = JSON.parse(router.data);
@@ -258,13 +236,10 @@ const CryptoPayModal = ({
     setMessage("");
 
     try {
-      const referral = await axios.post(
-        `${endPoint}/api/user/get-ref`,
-        {
-          apiKey,
-          refCode,
-        }
-      );
+      const referral = await axios.post(`${endPoint}/api/user/get-ref`, {
+        apiKey,
+        refCode,
+      });
 
       const referralAddress = referral.data.walletAddress;
       const refPercent = referral.data.percent;
@@ -273,21 +248,15 @@ const CryptoPayModal = ({
         const price = user.products[productId];
         const tokenAddress = user.options[network][token];
 
-        const router = await axios.post(
-            `${endPoint}/api/user/options`,
-          {
-            network,
-            token: routerAddress,
-          }
-        );
+        const router = await axios.post(`${endPoint}/api/user/options`, {
+          network,
+          token: routerAddress,
+        });
 
-        const response = await axios.post(
-            `${endPoint}/api/user/options`,
-          {
-            network,
-            token: tokenAddress,
-          }
-        );
+        const response = await axios.post(`${endPoint}/api/user/options`, {
+          network,
+          token: tokenAddress,
+        });
 
         const abi = JSON.parse(response.data);
         const routerAbi = JSON.parse(router.data);
@@ -395,20 +364,14 @@ const CryptoPayModal = ({
     setWaiting(true);
     setMessage("");
     try {
-      const response = await axios.post(
-        `${endPoint}/api/user/price`,
-        {
-          network,
-        }
-      );
+      const response = await axios.post(`${endPoint}/api/user/price`, {
+        network,
+      });
 
-      const router = await axios.post(
-        `${endPoint}/api/user/options`,
-        {
-          network,
-          token: routerAddress,
-        }
-      );
+      const router = await axios.post(`${endPoint}/api/user/options`, {
+        network,
+        token: routerAddress,
+      });
 
       const abi = JSON.parse(router.data);
 
@@ -501,13 +464,10 @@ const CryptoPayModal = ({
     setMessage("");
 
     try {
-      const referral = await axios.post(
-        `${endPoint}/api/user/get-ref`,
-        {
-          apiKey,
-          refCode,
-        }
-      );
+      const referral = await axios.post(`${endPoint}/api/user/get-ref`, {
+        apiKey,
+        refCode,
+      });
 
       const referralAddress = referral.data.walletAddress;
       const refPercent = referral.data.percent;
@@ -515,20 +475,14 @@ const CryptoPayModal = ({
       console.log(referralAddress);
 
       try {
-        const response = await axios.post(
-          `${endPoint}/api/user/price`,
-          {
-            network,
-          }
-        );
+        const response = await axios.post(`${endPoint}/api/user/price`, {
+          network,
+        });
 
-        const router = await axios.post(
-          `${endPoint}/api/user/options`,
-          {
-            network,
-            token: routerAddress,
-          }
-        );
+        const router = await axios.post(`${endPoint}/api/user/options`, {
+          network,
+          token: routerAddress,
+        });
 
         const abi = JSON.parse(router.data);
 
@@ -641,24 +595,31 @@ const CryptoPayModal = ({
 
   const postReceipt = async (total, token) => {
     try {
-      const response = await axios.post(
-        `${endPoint}/api/user/receipt`,
-        {
-          price: total,
-          apiKey,
-          type: token,
-        }
-      );
+      const response = await axios.post(`${endPoint}/api/user/receipt`, {
+        price: total,
+        apiKey,
+        type: token,
+      });
       console.log(response.data);
     } catch (error) {
       console.log(error);
     }
   };
 
+  const defaultButtonStyle = {
+    // Define default styles here
+    padding: "10px 20px",
+    backgroundColor: "#0c0a09",
+    color: "#fff",
+    border: "none",
+    borderRadius: "5px",
+    cursor: "pointer",
+  };
+
   // Default styles for the modal and buttons
   const defaultStyle = {
     modalContainer: {
-      display: "none",
+      display: "block",
       ...style,
     },
     modalContent: {
@@ -680,7 +641,7 @@ const CryptoPayModal = ({
       cursor: "pointer",
     },
     inputField: {
-      width: "90%",
+      width: "100%",
       padding: "10px",
       marginBottom: "10px",
       backgroundColor: "#0c0a09",
@@ -693,98 +654,99 @@ const CryptoPayModal = ({
   };
 
   return (
-    <div ref={modalRef} style={defaultStyle.modalContainer}>
-      <div style={defaultStyle.modalContent}>
-        <span
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
+    <>
+      {!showModal ? (
+        <button
+          onClick={getUser}
+          style={{ ...defaultButtonStyle, ...style }} // Merge default style with user-provided style
         >
-          <img src={cadetLogo} style={{ height: "48px" }} />
-          <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
-            cryptocadet&trade;
-          </h2>
-        </span>
-        {payOptions ? (
-          <>
-            {!network ? (
+          {authorized ? label : `⚠ Unauthorized`}
+        </button>
+      ) : (
+        <div style={defaultStyle.modalContainer}>
+          <div style={defaultStyle.modalContent}>
+            <span
+              style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <img src={cadetLogo} style={{ height: "48px" }} />
+              <h2 style={{ textAlign: "center", marginBottom: "20px" }}>
+                cryptocadet&trade;
+              </h2>
+            </span>
+            {payOptions ? (
               <>
-                {Array(
-                  Object.keys(user.options).map((key) => {
-                    return (
-                      <button
-                        key={key}
-                        style={defaultStyle.button}
-                        onClick={() => {
-                          getNetwork(key);
-                        }}
-                      >
-                        {key}
-                      </button>
-                    );
-                  })
+                {!network ? (
+                  <>
+                    {Array(
+                      Object.keys(user.options).map((key) => {
+                        return (
+                          <button
+                            key={key}
+                            style={defaultStyle.button}
+                            onClick={() => {
+                              getNetwork(key);
+                            }}
+                          >
+                            {key}
+                          </button>
+                        );
+                      })
+                    )}
+                  </>
+                ) : (
+                  <>
+                    {Array(
+                      Object.keys(user.options[network]).map((key) => {
+                        return (
+                          <button
+                            key={key}
+                            style={defaultStyle.button}
+                            onClick={() => {
+                              handlePayment(key);
+                            }}
+                          >
+                            {key}
+                          </button>
+                        );
+                      })
+                    )}
+                    <input
+                      type="number"
+                      style={defaultStyle.inputField}
+                      onChange={(e) => {
+                        setQuantity(e.target.value);
+                      }}
+                      value={quantity == 0 ? "" : quantity}
+                      placeholder="     Quantity"
+                    />
+                    {message && <p>{message}</p>}
+                    {waiting && <WaveLoading color="#fff" />}
+                  </>
                 )}
               </>
             ) : (
               <>
-                {Array(
-                  Object.keys(user.options[network]).map((key) => {
-                    return (
-                      <button
-                        key={key}
-                        style={defaultStyle.button}
-                        onClick={() => {
-                          handlePayment(key);
-                        }}
-                      >
-                        {key}
-                      </button>
-                    );
-                  })
+                {user && (
+                  <button style={defaultStyle.button} onClick={connectWallet}>
+                    Connect Wallet
+                  </button>
                 )}
-                <input
-                  type="number"
-                  style={defaultStyle.inputField}
-                  onChange={(e) => {
-                    setQuantity(e.target.value);
-                  }}
-                  value={quantity == 0 ? "" : quantity}
-                  placeholder="     Quantity"
-                />
-                {message && <p>{message}</p>}
+
                 {waiting && <WaveLoading color="#fff" />}
               </>
             )}
-          </>
-        ) : (
-          <>
-            {user && (
-              <button style={defaultStyle.button} onClick={connectWallet}>
-                Connect Wallet
-              </button>
-            )}
-
-            {waiting && <WaveLoading color="#fff" />}
-          </>
-        )}
-      </div>
-    </div>
+          </div>
+        </div>
+      )}
+    </>
   );
 };
 
-CryptoPayModal.propTypes = {
-  requireWalletConnection: PropTypes.bool,
-  apiKey: PropTypes.string,
-  style: PropTypes.object,
-};
+
 
 export default CryptoPayModal;
-
-export const openModal = () => {
-  if (modalInstance) {
-    modalInstance.openModal();
-  }
-};
