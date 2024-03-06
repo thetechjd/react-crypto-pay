@@ -20,6 +20,56 @@ Install the dependencies and devDependencies and start the server.
 npm install @cryptocadet/react-crypto-pay @coinbase/wallet-sdk @walletconnect/ethereum-provider axios react react-dom styled-components web3modal 
 ```
 
+## NextJS
+
+In order to install for NextJS, the CryptoPay Modal must be imported dynamically:
+
+```sh
+npm install @cryptocadet/react-crypto-pay @coinbase/wallet-sdk @walletconnect/ethereum-provider axios react react-dom styled-components web3modal
+```
+
+Create a components folder within your app or src folder, and create a new file.
+
+```sh
+import {CryptoPayModal} from 'react-crypto-pay'
+const ComponentName = () => {
+
+    return (
+
+        <CryptoPayModal
+        apiKey={'YOUR_API_KEY'}
+        productId={'YOUR_PROD_ID'}
+        requireWalletConnection={true}
+        label="BUTTON TITLE"
+      /> 
+
+    )
+}
+
+export default ComponentName;
+```
+
+In your page or index file, dynamically import the created component:
+
+```sh
+export default function Home() {
+
+  const ComponentName = dynamic(() => import("./../components/ComponentName"), { ssr: false });
+
+  return (
+    <ComponentName />
+  )
+```
+
+## Styles
+
+React Crypto Pay Modal style can be customized by targeting the cryptopaymodal and cryptopaybutton classes and the style tag in JSX. Web3Modal styles can be imported by adding the following in the component file:
+
+```sh
+import 'react-crypto-pay/dist/style.css'
+```
+
+
 ## License 
 
 MIT
