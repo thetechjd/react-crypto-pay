@@ -1,3 +1,3 @@
-export { default as CryptoPayModal}  from '../components/CryptoPayModal'
+export { default as CryptoPayButton}  from './CryptoPayButton'
 
 

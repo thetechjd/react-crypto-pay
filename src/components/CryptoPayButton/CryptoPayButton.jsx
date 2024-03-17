@@ -1,17 +1,17 @@
 //import PropTypes from "prop-types";
-import { useState} from "react";
+import { useState } from "react";
 import cadetLogo from "../../assets/cryptocadetlogo_white.png";
+import metamaskLogo from "../../assets/MetaMask_Fox.png";
+import coinbaseLogo from "../../assets/coinbase_icon.png";
 import Web3 from "web3";
 import Web3Modal from "web3modal";
 import EthereumProvider from "@walletconnect/ethereum-provider";
 import CoinbaseWalletSDK from "@coinbase/wallet-sdk";
 import axios from "axios";
 import WaveLoading from "../WaveLoading";
-import './../../index.css'
+import "./../../index.css";
 
-
-
-const CryptoPayModal = ({
+const CryptoPayButton = ({
   requireWalletConnection = true,
   apiKey,
   style,
@@ -30,13 +30,9 @@ const CryptoPayModal = ({
   const [network, setNetwork] = useState("");
   const [quantity, setQuantity] = useState(0);
   const [message, setMessage] = useState("");
-  const [refCode, setRefCode] = useState("");
   const [routerAddress, setRouterAddress] = useState("");
 
-
   const endPoint = "http://localhost:3004";
-
-  
 
   const getUser = async () => {
     try {
@@ -45,10 +41,84 @@ const CryptoPayModal = ({
       });
 
       setUser(response.data);
-      setShowModal(true);
+      //setShowModal(true);
     } catch (error) {
       setAuthorized(false);
     }
+  };
+
+  function isMobileDevice() {
+    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
+      userAgent.toLowerCase()
+    );
+  }
+
+
+
+
+  const handleDevice = async () => {
+
+    if (isMobileDevice()) {
+      console.log("You are using a mobile device.");
+      setShowModal(true)
+     
+  
+    } else {
+      console.log("You are not using a mobile device.");
+      openPortal();
+      
+      
+     
+    }
+
+  }
+
+  const openPortal = async () => {
+
+    let refCode = "";
+
+    if (typeof window !== "undefined") {
+      const q = new URLSearchParams(window.location.search);
+      if (q.get("referrer")){
+       refCode = q.get("referrer");
+      }
+    }
+    let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
+    width=400,height=500,left=${window.screen.width},top=0`;
+    const newWindow = window.open("", "_blank", params);
+
+    
+
+    
+
+    // Define your API URL and the data you want to send
+    const apiUrl = `${endPoint}/api/user/get-key`;
+    const data = {
+      apiKey,
+    };
+
+    try {
+      const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+      });
+      
+
+      if (response.ok) {
+          const newUrl = `https://portal.cryptocadet.app?pubKey=${apiKey}&prod=${productId}&referrer=${refCode}`;
+          console.log('Navigating to:', newUrl);
+          newWindow.location = newUrl;
+      } else {
+          console.log('Closing window due to unsuccessful response');
+          newWindow.close();
+      }
+  } catch (error) {
+      console.error('Error:', error);
+      console.log('Closing window due to error');
+      newWindow.close();
+  }
   };
 
   const providerOptions = {
@@ -655,14 +725,14 @@ const CryptoPayModal = ({
 
   return (
     <>
-      {!showModal ? (
-        <button
-          onClick={getUser}
-          style={{ ...defaultButtonStyle, ...style }} // Merge default style with user-provided style
-        >
-          {authorized ? label : `⚠ Unauthorized`}
-        </button>
-      ) : (
+       {!showModal ? ( 
+      <button
+        onClick={handleDevice}
+        style={{ ...defaultButtonStyle, ...style }} // Merge default style with user-provided style
+      >
+        {authorized ? label : `⚠ Unauthorized`}
+      </button>
+       ) : (
         <div style={defaultStyle.modalContainer}>
           <div style={defaultStyle.modalContent}>
             <span
@@ -678,75 +748,35 @@ const CryptoPayModal = ({
                 cryptocadet&trade;
               </h2>
             </span>
-            {payOptions ? (
-              <>
-                {!network ? (
-                  <>
-                    {Array(
-                      Object.keys(user.options).map((key) => {
-                        return (
-                          <button
-                            key={key}
-                            style={defaultStyle.button}
-                            onClick={() => {
-                              getNetwork(key);
-                            }}
-                          >
-                            {key}
-                          </button>
-                        );
-                      })
-                    )}
-                  </>
-                ) : (
-                  <>
-                    {Array(
-                      Object.keys(user.options[network]).map((key) => {
-                        return (
-                          <button
-                            key={key}
-                            style={defaultStyle.button}
-                            onClick={() => {
-                              handlePayment(key);
-                            }}
-                          >
-                            {key}
-                          </button>
-                        );
-                      })
-                    )}
-                    <input
-                      type="number"
-                      style={defaultStyle.inputField}
-                      onChange={(e) => {
-                        setQuantity(e.target.value);
-                      }}
-                      value={quantity == 0 ? "" : quantity}
-                      placeholder="     Quantity"
-                    />
-                    {message && <p>{message}</p>}
-                    {waiting && <WaveLoading color="#fff" />}
-                  </>
-                )}
-              </>
-            ) : (
-              <>
-                {user && (
-                  <button style={defaultStyle.button} onClick={connectWallet}>
-                    Connect Wallet
-                  </button>
-                )}
+            
+                 <a href={`https://metamask.app.link/dapp/portal.cryptocadet.app?pubKey=${apiKey}&prod=${productId}&referrer=${refCode}`}><button style={defaultStyle.button} >
+                    <span style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center"
+              }}><img src={metamaskLogo} style={{ height: "24px" }} />Open Metamask</span>
+                  </button></a>
+                  <a href={`https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Fportal.cryptocadet.app%3FpubKey%3D${apiKey}%26prod%3D${productId}%26referrer%3D${refCode}`}> <button style={defaultStyle.button} onClick={connectWallet}>
+                  <span style={{
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                justifyContent: "center"
+                
+              }}><img src={coinbaseLogo} style={{ height: "24px" }} />Open Coinbase Wallet</span>
+                  </button></a>
+                  
+              
 
-                {waiting && <WaveLoading color="#fff" />}
-              </>
-            )}
+              
+             
+          
           </div>
         </div>
-      )}
+                )} 
     </>
   );
 };
 
-
-
-export default CryptoPayModal;
+export default CryptoPayButton;

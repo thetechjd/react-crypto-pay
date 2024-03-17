@@ -1,7 +1,7 @@
 {
   "name": "@cryptocadet/react-crypto-pay",
   "private": false,
-  "version": "1.0.0",
+  "version": "1.0.1",
   "author": "The TechJD",
   "license": "MIT",
   "description": "Api for evm-chain crypto payment integration.",
