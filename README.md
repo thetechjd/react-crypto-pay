@@ -43,6 +43,7 @@ const ComponentName = () => {
      shippingAddress='required'
      label='BUTTON TITLE'
      style={null}
+     lang='en'
      
       /> 
 
@@ -52,7 +53,16 @@ const ComponentName = () => {
 export default ComponentName;
 ```
 
-The 'email' and 'shippingAddress' variables can be required in order to request the user's email and shipping address upon payment. Styles can be input via the style variable to change the button style.
+The 'email' and 'shippingAddress' variables can be required in order to request the user's email and shipping address upon payment. Styles can be input via the style variable to change the button style. The lang property corresponds to the ISO 639-1 Code for the following supported languages:
+
+- ar (Arabic)
+- de (German)
+- en (English)
+- es (Spanish)
+- fr (French)
+- pt (Portuguese)
+- zh (Chinese)
+
 
 In your page or index file, dynamically import the created component:
 
