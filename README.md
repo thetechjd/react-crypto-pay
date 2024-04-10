@@ -17,7 +17,7 @@ React-Crypto-Pay requires [Node.js](https://nodejs.org/) v16+ to run.
 Install the dependencies and devDependencies and start the server.
 
 ```sh
-npm install @cryptocadet/react-crypto-pay @coinbase/wallet-sdk @walletconnect/ethereum-provider axios react react-dom styled-components web3modal 
+npm install @cryptocadet/react-crypto-pay 
 ```
 
 ## NextJS
@@ -25,7 +25,7 @@ npm install @cryptocadet/react-crypto-pay @coinbase/wallet-sdk @walletconnect/et
 In order to install for NextJS, the CryptoPay Modal must be imported dynamically:
 
 ```sh
-npm install @cryptocadet/react-crypto-pay @coinbase/wallet-sdk @walletconnect/ethereum-provider axios react react-dom styled-components web3modal
+npm install @cryptocadet/react-crypto-pay 
 ```
 
 Create a components folder within your app or src folder, and create a new file.
@@ -36,11 +36,14 @@ const ComponentName = () => {
 
     return (
 
-        <CryptoPayModal
-        apiKey={'YOUR_API_KEY'}
-        productId={'YOUR_PROD_ID'}
-        requireWalletConnection={true}
-        label="BUTTON TITLE"
+         <CryptoPayButton
+     apiKey={'YOUR_API_KEY'}
+     productId={'YOUR_PRODUCT_ID'}
+     email='required'
+     shippingAddress='required'
+     label='BUTTON TITLE'
+     style={null}
+     
       /> 
 
     )
@@ -48,6 +51,8 @@ const ComponentName = () => {
 
 export default ComponentName;
 ```
+
+The 'email' and 'shippingAddress' variables can be required in order to request the user's email and shipping address upon payment. Styles can be input via the style variable to change the button style.
 
 In your page or index file, dynamically import the created component:
 
@@ -63,7 +68,7 @@ export default function Home() {
 
 ## Styles
 
-React Crypto Pay Modal style can be customized by targeting the cryptopaymodal and cryptopaybutton classes and the style tag in JSX. Web3Modal styles can be imported by adding the following in the component file:
+React Crypto Pay Button style can be customized by targeting the cryptopaymodal and cryptopaybutton classes and the style tag in JSX. Web3Modal styles can be imported by adding the following in the component file:
 
 ```sh
 import 'react-crypto-pay/dist/style.css'

@@ -8,7 +8,10 @@ const CryptoPayButton = ({
   apiKey,
   style,
   productId,
+  email=null,
+  shippingAddress=null,
   label,
+  lang='en'
 }) => {
   
   const [showModal, setShowModal] = useState(false);
@@ -16,6 +19,7 @@ const CryptoPayButton = ({
   
 
   const endPoint = "https://api.cryptocadet.app";
+  //const endPoint = "http://localhost:3004";
 
   const wrapperRef = useRef(null);
 
@@ -33,6 +37,17 @@ const CryptoPayButton = ({
           document.removeEventListener('mousedown', handleClickOutside);
       };
   }, [wrapperRef]);
+
+
+  const translation = {
+    "en": "Open",
+    "fr": "Ouvrir",
+    "ar": "افتح",
+    "es": "Abrir",
+    "pt": "Abrir",
+    "de": "Öffnen",
+    "zh": "打开"
+  }
 
 
 
@@ -96,7 +111,7 @@ const CryptoPayButton = ({
       
 
       if (response.ok) {
-          const newUrl = `https://portal.cryptocadet.app?pubKey=${apiKey}&prod=${productId}&referrer=${refCode}`;
+          const newUrl = `https://portal.cryptocadet.app?pubKey=${apiKey}&prod=${productId}&referrer=${refCode}&email=${email}&shippingAddress=${shippingAddress}&lang=${lang}`;
           console.log('Navigating to:', newUrl);
           newWindow.location = newUrl;
       } else {
@@ -186,22 +201,22 @@ const CryptoPayButton = ({
               </h2>
             </span>
             
-                 <a href={`https://metamask.app.link/dapp/portal.cryptocadet.app?pubKey=${apiKey}&prod=${productId}&referrer=${refCode}`}><button style={defaultStyle.button} >
+                 <a href={`https://metamask.app.link/dapp/portal.cryptocadet.app?pubKey=${apiKey}&prod=${productId}&referrer=${refCode}&email=${email}&shippingAddress=${shippingAddress}&lang=${lang}`}><button style={defaultStyle.button} >
                     <span style={{
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center"
-              }}><img src={metamaskLogo} style={{ height: "24px" }} />Open Metamask</span>
+              }}><img src={metamaskLogo} style={{ height: "24px" }} />{translation[lang]} Metamask</span>
                   </button></a>
-                  <a href={`https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Fportal.cryptocadet.app%3FpubKey%3D${apiKey}%26prod%3D${productId}%26referrer%3D${refCode}`}> <button style={defaultStyle.button}>
+                  <a href={`https://go.cb-w.com/dapp?cb_url=https%3A%2F%2Fportal.cryptocadet.app%3FpubKey%3D${apiKey}%26prod%3D${productId}%26referrer%3D${refCode}%26email%3D${email}%26shippingAddress%3D${shippingAddress}%26lang%3D${lang}`}> <button style={defaultStyle.button}>
                   <span style={{
                 display: "flex",
                 flexDirection: "row",
                 alignItems: "center",
                 justifyContent: "center"
                 
-              }}><img src={coinbaseLogo} style={{ height: "24px" }} />Open Coinbase Wallet</span>
+              }}><img src={coinbaseLogo} style={{ height: "24px" }} />{translation[lang]} Coinbase Wallet</span>
                   </button></a>
                   
               

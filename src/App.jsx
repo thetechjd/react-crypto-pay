@@ -10,8 +10,12 @@ function App() {
       
      <CryptoPayButton
      apiKey={'YOUR_API_KEY'}
-     productId={'YOUR_PROD_ID'}
+     productId={'YOUR_PRODUCT_ID'}
+     email='required'
+     shippingAddress='required'
      label='Pay with Crypto'
+     style={null}
+     lang='en'
      
      
      />
