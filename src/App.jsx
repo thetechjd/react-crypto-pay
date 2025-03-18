@@ -47,7 +47,7 @@ useEffect(() => {
    <>
       
      <CryptoPayButton
-     apiKey={'yourapikey'}
+     apiKey={'pk_H0q1poCP0iOWzsWq270wLcaxvLckUhnW'}
      productId={'sometestid0'}
      displayName={'Chessboard'}
      email='required'
@@ -62,6 +62,7 @@ useEffect(() => {
      onSuccess={doSomething}
      shoppingCart={false}
      noQuantity={true}
+     priceOnly={true}
      
      
      
