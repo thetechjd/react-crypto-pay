@@ -5,6 +5,27 @@ import coinbaseLogo from "../../assets/coinbase_icon.png";
 import phantomLogo from "../../assets/phantom-logo.png";
 import "./../../index.css";
 
+type LangCode = "en" | "fr" | "ar" | "es" | "pt" | "de" | "zh";
+
+interface CryptoPayButtonProps {
+  apiKey:string,
+  style:any,
+  cartStyle:any,
+  productId:string,
+  displayName:string,
+  email: string | null,
+  shippingAddress: null,
+  label: string,
+  lang:LangCode,
+  eth:boolean,
+  sol:any,
+  redirect:any,
+  onSuccess:any,
+  shoppingCart:any,
+  noQuantity:any,
+  priceOnly:any
+}
+
 const CryptoPayButton = ({
   apiKey,
   style,
@@ -22,7 +43,7 @@ const CryptoPayButton = ({
   shoppingCart,
   noQuantity,
   priceOnly
-}) => {
+}: CryptoPayButtonProps) => {
   
   
   const [showModal, setShowModal] = useState(false);
@@ -35,11 +56,11 @@ const CryptoPayButton = ({
   const portal = "http://localhost:5174"
   //const portal = "https://portal.cryptocadet.app"
 
-  const wrapperRef = useRef(null);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
 
   useEffect(() => {
-      function handleClickOutside(event) {
+      function handleClickOutside(event:any) {
           if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
               setShowModal(false);
              
@@ -67,7 +88,7 @@ const CryptoPayButton = ({
 
 
   function isMobileDevice() {
-    const userAgent = navigator.userAgent || navigator.vendor || window.opera;
+    const userAgent = navigator.userAgent || navigator.vendor || (window as any).opera;
     return /android|webos|iphone|ipad|ipod|blackberry|iemobile|opera mini/i.test(
       userAgent.toLowerCase()
     );
@@ -81,7 +102,7 @@ const CryptoPayButton = ({
     if (typeof window !== "undefined") {
       const q = new URLSearchParams(window.location.search);
       if (q.get("referrer")){
-       refCode = q.get("referrer");
+       refCode = q.get("referrer")!;
        setRefCode(refCode)
       }
       
@@ -106,7 +127,7 @@ const CryptoPayButton = ({
 
   }
 
-  const openPortal = async (refCode) => {
+  const openPortal = async (refCode: string) => {
 
    
     let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
@@ -120,23 +141,7 @@ const CryptoPayButton = ({
       apiKey,
     };
 
-    try {
-      const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
-      });
-      //console.log(`${portal}?pubKey=${apiKey}&prod=${productId}&referrer=${refCode}&email=${email}&shippingAddress=${shippingAddress}&lang=${lang}`)
-      
-
-      if (response.ok) {
-          const newUrl = `${portal}?pubKey=${apiKey}&prod=${localStorage.getItem(`${apiKey}-cart`) ? localStorage.getItem(`${apiKey}-cart`) : JSON.stringify({productId : productId})}&referrer=${refCode}&email=${email}&shippingAddress=${shippingAddress}&lang=${lang}&eth=${eth}&sol=${sol}&redirect=${redirect}&shoppingCart=${localStorage.getItem(`${apiKey}-cart`) ? true : false}&noQuantity=${noQuantity}&priceOnly=${priceOnly}`;
-          console.log('Navigating to:', newUrl);
-          localStorage.removeItem(`${apiKey}-cart`)
-          newWindow.location = newUrl;
-
-           // Listener setup
-    const handleMessage = (event) => {
+    const handleMessage = (event:any) => {
       if (event.data === "Receipt added successfully") {  // Replace with the actual origin of your portal
           console.log("Received message:", event.data);
           // Handle the message here
@@ -151,16 +156,34 @@ const CryptoPayButton = ({
       }
   };
 
-  window.addEventListener('message', handleMessage);
+    try {
+      const response = await fetch(apiUrl, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(data),
+      });
+      //console.log(`${portal}?pubKey=${apiKey}&prod=${productId}&referrer=${refCode}&email=${email}&shippingAddress=${shippingAddress}&lang=${lang}`)
+      
+
+      if (response.ok) {
+          const newUrl = `${portal}?pubKey=${apiKey}&prod=${localStorage.getItem(`${apiKey}-cart`) ? localStorage.getItem(`${apiKey}-cart`) : JSON.stringify({productId : productId})}&referrer=${refCode}&email=${email}&shippingAddress=${shippingAddress}&lang=${lang}&eth=${eth}&sol=${sol}&redirect=${redirect}&shoppingCart=${localStorage.getItem(`${apiKey}-cart`) ? true : false}&noQuantity=${noQuantity}&priceOnly=${priceOnly}`;
+          console.log('Navigating to:', newUrl);
+          localStorage.removeItem(`${apiKey}-cart`)
+          newWindow!.location = newUrl;
+
+           // Listener setup
+    
+
+        window.addEventListener('message', handleMessage);
 
       } else {
           console.log('Closing window due to unsuccessful response');
-         newWindow.close();
+         newWindow!.close();
       }
   } catch (error) {
       console.error('Error:', error);
       console.log('Closing window due to error');
-      newWindow.close();
+      newWindow!.close();
   }
    // Cleanup on component unmount or under specific conditions
    return () => {
@@ -174,12 +197,12 @@ const CryptoPayButton = ({
     const queryParams = new URLSearchParams({
       pubKey: apiKey,
       prod: productId,
-      email: email,
-      shippingAddress: shippingAddress,
+      email: email!,
+      shippingAddress: shippingAddress!,
       lang: lang,
-      shoppingCart: localStorage.getItem(`${apiKey}-cart`) ? true : false ,
+      shoppingCart: localStorage.getItem(`${apiKey}-cart`) ? 'true' : 'false' ,
       noQuantity: noQuantity,
-      walletApp: true,
+      walletApp: 'true',
       priceOnly: priceOnly,
       ref: "https://cryptocadet.io"
 
@@ -204,7 +227,7 @@ const CryptoPayButton = ({
     window.location.href = url;
   }
 
-  function addItemToLocalStorageArray(key, item) {
+  function addItemToLocalStorageArray(key:any, item:any) {
     // Retrieve the existing array from local storage
     let existingItems = localStorage.getItem(key);
 
