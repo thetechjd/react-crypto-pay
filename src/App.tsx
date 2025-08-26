@@ -5,7 +5,7 @@ import { useEffect } from 'react'
 function App() {
 
   useEffect(() => {
-    const handleMessage = async (event) => {
+    const handleMessage = async (event:any) => {
 
      
       let response =  event.data;
@@ -56,7 +56,7 @@ useEffect(() => {
      style={null}
      cartStyle={null}
      lang='en'
-     eth='true'
+     eth={true}
      sol="true"
      redirect='http://localhost:5173'
      onSuccess={doSomething}
