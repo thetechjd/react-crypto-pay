@@ -78,7 +78,7 @@ const BoxLoadingFive = styled(box)`
 
 const WaveLoading = ({ style = commonStyle, color, speed, size="default" }) => {
   return (
-    <LoadContainer style={style} size={size}>
+    <LoadContainer style={style} size={size} data-testid="wave-container">
       <BoxLoadingFirst color={color} speed={speed} />
       <BoxLoadingTwo color={color} speed={speed} />
       <BoxLoadingThree color={color} speed={speed} />
