@@ -48,8 +48,8 @@ useEffect(() => {
       
      <CryptoPayButton
      apiKey={'pk_H0q1poCP0iOWzsWq270wLcaxvLckUhnW'}
-     productId={'sometestid0'}
-     displayName={'Chessboard'}
+     productId={'ice-cream-00281'}
+     displayName={'Ice Cream'}
      email='required'
      shippingAddress={null}
      label='Pay with Crypto'
