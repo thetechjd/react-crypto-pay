@@ -13,6 +13,7 @@ function App() {
 
       if (response) {
         response = String(response);
+        console.log("event success")
        /*  try {
           response = JSON.parse(response);
           console.log(response)

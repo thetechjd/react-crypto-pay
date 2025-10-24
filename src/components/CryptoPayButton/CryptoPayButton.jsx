@@ -21,7 +21,7 @@ const CryptoPayButton = ({
   onSuccess,
   shoppingCart,
   noQuantity,
-  priceOnly
+  priceOnly,
 }) => {
   
   
@@ -42,7 +42,7 @@ const CryptoPayButton = ({
       function handleClickOutside(event) {
           if (wrapperRef.current && !wrapperRef.current.contains(event.target)) {
               setShowModal(false);
-             
+              console.log("Modal closed")
           }
       }
 
@@ -135,23 +135,7 @@ const CryptoPayButton = ({
           localStorage.removeItem(`${apiKey}-cart`)
           newWindow.location = newUrl;
 
-           // Listener setup
-    const handleMessage = (event) => {
-      if (event.data === "Receipt added successfully") {  // Replace with the actual origin of your portal
-          console.log("Received message:", event.data);
-          // Handle the message here
-          console.log("we did it!")
-          if(onSuccess){
-            try {
-              onSuccess();
-            } catch(err) {
-              console.log('Could not complete success function')
-            }
-          }
-      }
-  };
-
-  window.addEventListener('message', handleMessage);
+        window.addEventListener('message', handleMessage);
 
       } else {
           console.log('Closing window due to unsuccessful response');
@@ -166,6 +150,22 @@ const CryptoPayButton = ({
    return () => {
     window.removeEventListener('message', handleMessage);
 };
+  };
+
+             // Listener setup
+    const handleMessage = (event) => {
+      if (event.data === "Receipt added successfully") {  // Replace with the actual origin of your portal
+          console.log("Received message:", event.data);
+          // Handle the message here
+          console.log("we did it!")
+          if(onSuccess){
+            try {
+              onSuccess();
+            } catch(err) {
+              console.log('Could not complete success function')
+            }
+          }
+      }
   };
 
   const phantomConnect = async () => {
@@ -302,19 +302,21 @@ const CryptoPayButton = ({
       <button
       onMouseEnter={() => { setCheckout(true); }}
 onMouseLeave={() => { 
-    setTimeout(() => { setCheckout(false); }, 3000)}}
+    setTimeout(() => { setCheckout(false); }, 3000);console.log("Timeout executed.")}}
       onClick={()=> {addItemToLocalStorageArray(`${apiKey}-cart`, {displayName: displayName, productId: productId})}}
-      style={{...defaultCartStyle, ...cartStyle}}>
+      style={{...defaultCartStyle, ...cartStyle}}
+      data-testid="cart-button"
+      >
        &#128722;
       </button>
 
 
-      )}
+       )} 
       </span>
 
-      </div>
+       </div>
        ) : (
-        <div ref={wrapperRef} style={defaultStyle.modalContainer}>
+        <div ref={wrapperRef} style={defaultStyle.modalContainer} data-testid="modal">
           <div style={defaultStyle.modalContent}>
             <span
               style={{
@@ -359,12 +361,7 @@ onMouseLeave={() => {
                 
               }}><img src={phantomLogo} style={{ height: "24px",marginRight: "10px" }} />{translation[lang]} Phantom</span>
                   </button>
-                  
-              
-
-              
-             
-          
+                       
           </div>
         </div>
                 )} 
