@@ -107,50 +107,54 @@ const CryptoPayButton = ({
   }
 
   const openPortal = async (refCode) => {
-
-   
-    let params = `scrollbars=no,resizable=no,status=no,location=no,toolbar=no,menubar=no,
-    width=400,height=500,left=${window.screen.width},top=0`;
-    const newWindow = window.open("", "_blank", params);
-
-
-    // Define your API URL and the data you want to send
+    // where the user should come back to (current page)
+    const returnUrl = window.location.href; // includes current path + query
+  
     const apiUrl = `${endPoint}/api/user/checkout`;
-    const data = {
-      apiKey,
-    };
-
+    const data = { apiKey };
+  
     try {
       const response = await fetch(apiUrl, {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify(data),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(data),
       });
-      //console.log(`${portal}?pubKey=${apiKey}&prod=${productId}&referrer=${refCode}&email=${email}&shippingAddress=${shippingAddress}&lang=${lang}`)
-      
-
-      if (response.ok) {
-          const newUrl = `${portal}?pubKey=${apiKey}&prod=${localStorage.getItem(`${apiKey}-cart`) ? localStorage.getItem(`${apiKey}-cart`) : JSON.stringify({productId : productId})}&referrer=${refCode}&email=${email}&shippingAddress=${shippingAddress}&lang=${lang}&eth=${eth}&sol=${sol}&redirect=${redirect}&shoppingCart=${localStorage.getItem(`${apiKey}-cart`) ? true : false}&noQuantity=${noQuantity}&priceOnly=${priceOnly}`;
-          console.log('Navigating to:', newUrl);
-          localStorage.removeItem(`${apiKey}-cart`)
-          newWindow.location = newUrl;
-
-        window.addEventListener('message', handleMessage);
-
-      } else {
-          console.log('Closing window due to unsuccessful response');
-         newWindow.close();
+  
+      if (!response.ok) {
+        // handle error state however you want
+        console.error("Checkout init failed");
+        return;
       }
-  } catch (error) {
-      console.error('Error:', error);
-      console.log('Closing window due to error');
-      newWindow.close();
-  }
-   // Cleanup on component unmount or under specific conditions
-   return () => {
-    window.removeEventListener('message', handleMessage);
-};
+  
+      const cart = localStorage.getItem(`${apiKey}-cart`);
+      const prodParam = cart ? cart : JSON.stringify({ productId });
+  
+      const portalUrl = new URL(portal);
+      portalUrl.searchParams.set("pubKey", apiKey);
+      portalUrl.searchParams.set("prod", prodParam);
+      portalUrl.searchParams.set("referrer", refCode ?? "");
+      portalUrl.searchParams.set("email", email ?? "");
+      portalUrl.searchParams.set("shippingAddress", shippingAddress ?? "");
+      portalUrl.searchParams.set("lang", lang ?? "");
+      portalUrl.searchParams.set("eth", String(eth ?? ""));
+      portalUrl.searchParams.set("sol", String(sol ?? ""));
+      portalUrl.searchParams.set("shoppingCart", cart ? "true" : "false");
+      portalUrl.searchParams.set("noQuantity", String(!!noQuantity));
+      portalUrl.searchParams.set("priceOnly", String(!!priceOnly));
+  
+      // Stripe-style: single return URL that you will append success/cancel to
+      portalUrl.searchParams.set("return_url", returnUrl);
+  
+      // (optional) clear cart before leaving
+      localStorage.removeItem(`${apiKey}-cart`);
+  
+      // redirect same tab
+      window.location.assign(portalUrl.toString());
+    } catch (err) {
+      console.error("Error:", err);
+    }
   };
+  
 
              // Listener setup
     const handleMessage = (event) => {

@@ -63,7 +63,7 @@ useEffect(() => {
      onSuccess={doSomething}
      shoppingCart={false}
      noQuantity={true}
-     priceOnly={true}
+     priceOnly={false}
      
      
      

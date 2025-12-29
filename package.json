@@ -60,6 +60,7 @@
     "vitest": "^3.2.4"
   },
   "dependencies": {
+    "ethers": "^5.8.0",
     "styled-components": "^6.1.19"
   }
 }
