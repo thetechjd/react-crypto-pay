@@ -42,6 +42,10 @@
     "test": "vitest run",
     "watch": "vitest"
   },
+  "peerDependencies": {
+    "react": ">=18",
+    "react-dom": ">=18"
+  },
   "devDependencies": {
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^14.2.1",
