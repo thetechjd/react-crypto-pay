@@ -10,11 +10,18 @@ export default defineConfig({
       fileName: (format) => `react-crypto-pay.${format}.js`
     },
     rollupOptions: {
-      external: ['react', 'react-dom'],
+      external: [
+        'react', 
+        'react-dom', 
+        'react/jsx-runtime',
+        'react/jsx-dev-runtime'
+      ],
       output: {
         globals: {
           react: 'React',
-          "react-dom": "ReactDOM"
+          "react-dom": "ReactDOM",
+          'react/jsx-runtime': 'ReactJsxRuntime',
+          'react/jsx-dev-runtime': 'ReactJsxDevRuntime'
         }
       }
     },
