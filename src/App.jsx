@@ -59,12 +59,12 @@ useEffect(() => {
      lang='en'
      eth='true'
      sol="true"
+     promoCode=""
      redirect='http://localhost:5173'
      onSuccess={doSomething}
      shoppingCart={false}
      noQuantity={true}
      priceOnly={false}
-     
      
      
      />

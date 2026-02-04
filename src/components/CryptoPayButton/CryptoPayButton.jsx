@@ -17,6 +17,7 @@ const CryptoPayButton = ({
   lang='en',
   eth=true,
   sol,
+  promoCode,
   redirect,
   onSuccess,
   shoppingCart,
@@ -141,6 +142,7 @@ const CryptoPayButton = ({
       portalUrl.searchParams.set("shoppingCart", cart ? "true" : "false");
       portalUrl.searchParams.set("noQuantity", String(!!noQuantity));
       portalUrl.searchParams.set("priceOnly", String(!!priceOnly));
+      portalUrl.searchParams.set("promoCode", String(promoCode));
   
       // Stripe-style: single return URL that you will append success/cancel to
       portalUrl.searchParams.set("return_url", returnUrl);
@@ -185,6 +187,7 @@ const CryptoPayButton = ({
       noQuantity: noQuantity,
       walletApp: true,
       priceOnly: priceOnly,
+      promoCode:promoCode,
       ref: "https://cryptocadet.io"
 
     });
