@@ -49,8 +49,8 @@ useEffect(() => {
       
      <CryptoPayButton
      apiKey={'pk_H0q1poCP0iOWzsWq270wLcaxvLckUhnW'}
-     productId={'ice-cream-00281'}
-     displayName={'Ice Cream'}
+     productId={'hoc-job-listing'}
+     displayName={'HOC-JOB-LISTING'}
      email='required'
      shippingAddress={null}
      label='Pay with Crypto'
@@ -59,12 +59,12 @@ useEffect(() => {
      lang='en'
      eth='true'
      sol="true"
+     promoCode=""
      redirect='http://localhost:5173'
      onSuccess={doSomething}
      shoppingCart={false}
      noQuantity={true}
      priceOnly={false}
-     
      
      
      />
